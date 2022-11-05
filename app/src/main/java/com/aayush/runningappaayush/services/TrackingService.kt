@@ -62,6 +62,7 @@ class TrackingService:LifecycleService() {
     lateinit var currentNotificationBuilder:NotificationCompat.Builder
 
     private var isFirstRun = true
+    private var serviceKilled = false
 
     private val timeRunInSeconds = MutableLiveData<Long>()
 
@@ -90,6 +91,21 @@ class TrackingService:LifecycleService() {
             updateLocationTracking(it)
             updateNotificationTrackingState(it)
         }
+    }
+
+    private fun killService(){
+        serviceKilled = true
+        isFirstRun = true
+        isTimerEnabled = false
+        isTracking.postValue(false)
+        pauseService()
+        postInitialValues()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        }else{
+            stopForeground(true)
+        }
+        stopSelf()
     }
 
     @SuppressLint("RestrictedApi")
@@ -136,13 +152,17 @@ class TrackingService:LifecycleService() {
 //        }
         currentNotificationBuilder.mActions.clear()
 
-        currentNotificationBuilder = baseNotificationBuilder
-            .addAction(R.drawable.ic_pause_black_24dp,
-                notificationActionText,
-                pendingIntent)
+        if(!serviceKilled){
+            currentNotificationBuilder = baseNotificationBuilder
+                .addAction(R.drawable.ic_pause_black_24dp,
+                    notificationActionText,
+                    pendingIntent)
 
-        notificationManager.notify(NOTIFICATION_ID,
-            currentNotificationBuilder.build())
+            notificationManager.notify(NOTIFICATION_ID,
+                currentNotificationBuilder.build())
+        }
+
+
     }
 
     private fun startTimer(){
@@ -206,6 +226,7 @@ class TrackingService:LifecycleService() {
 
                 ACTION_STOP_SERVICE -> {
                     Timber.d("Stopped service")
+                    killService()
                 }
 
             }
@@ -283,10 +304,13 @@ class TrackingService:LifecycleService() {
         timeRunInSeconds.observe(
             this
         ){
-            val notification = currentNotificationBuilder
-                .setContentText(Utils.getFormattedStopWatchTime(it*1000))
-            notificationManager.notify(NOTIFICATION_ID,
-                notification.build())
+            if(!serviceKilled){
+                val notification = currentNotificationBuilder
+                    .setContentText(Utils.getFormattedStopWatchTime(it*1000))
+                notificationManager.notify(NOTIFICATION_ID,
+                    notification.build())
+            }
+
         }
     }
 

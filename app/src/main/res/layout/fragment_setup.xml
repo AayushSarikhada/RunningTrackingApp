@@ -35,6 +35,7 @@
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:textColor="@android:color/white"
             android:hint="@string/your_name"
             android:inputType="textPersonName" />
 
@@ -56,6 +57,7 @@
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:textColor="@android:color/white"
             android:hint="@string/your_weight"
             android:inputType="numberDecimal" />
 
@@ -87,9 +89,10 @@
 
         <TextView
             android:id="@+id/tvContinue"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Continue"
+            android:textAlignment="center"
             android:textColor="@color/colorAccent"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
