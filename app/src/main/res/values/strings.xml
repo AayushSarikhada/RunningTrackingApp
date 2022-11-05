@@ -8,4 +8,9 @@
         <item>Calories Burned</item>
     </string-array>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCy-W1K4OysG5-f0HaUZWU4gJaf5WnWmhs</string>
+    <string name="running_app">Running App</string>
+    <string name="your_name">Your Name</string>
+    <string name="welcome_nplease_enter_your_name_and_weight">Welcome!\nPlease enter your name and weight.</string>
+    <string name="your_weight">Your Weight</string>
+    <string name="kg">kg</string>
 </resources>
